@@ -1,10 +1,13 @@
 package com.andrewexe.ui;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
 
-public class MainWindow{
+import com.andrewexe.io.LoadSaveFile;
+
+import java.awt.event.*;
+import java.io.File;
+
+public class MainWindow {
 
     private JFrame mainFrame;
     private JMenuBar mJMenuBar;
@@ -19,15 +22,18 @@ public class MainWindow{
         return mainFrame;
     }
 
-    private JMenuBar getMenuBar(){
-        // sets menubar with 
-        if(mJMenuBar == null){
+    private JMenuBar getMenuBar() {
+        // sets menubar with
+        if (mJMenuBar == null) {
             mJMenuBar = new JMenuBar();
-            // fill 
+            // fill
             JMenu menu = new JMenu("File");
+
             JMenuItem openItem = new JMenuItem("Open");
-            
+            openItem.addActionListener(new OpenButtonEventHandler());
+
             JMenuItem saveItem = new JMenuItem("Save");
+            saveItem.addActionListener(new SaveButtonEventHandler());
 
             JMenuItem closeProgram = new JMenuItem("Close");
             closeProgram.addActionListener(new ExitMenuItemHandler());
@@ -41,46 +47,62 @@ public class MainWindow{
         return mJMenuBar;
     }
 
-    public JTextArea getTextArea(){
-        if(textArea == null){
-            textArea = new JTextArea( );
+    public JTextArea getTextArea() {
+        if (textArea == null) {
+            textArea = new JTextArea();
             textArea.setLineWrap(true);
         }
         return textArea;
     }
 
-    private JScrollPane getJScrollPane()
-    {
-        if(areaScrollPane == null)
-        {
+    private JScrollPane getJScrollPane() {
+        if (areaScrollPane == null) {
             areaScrollPane = new JScrollPane(getTextArea());
         }
         return areaScrollPane;
     }
 
-    class OpenButtonEventHandler implements ActionListener
-    {
-        public void actionPerformed(ActionEvent e)
-        {
-            //open file dialog
+    class OpenButtonEventHandler implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser jfc = new JFileChooser();
+            jfc.setFileSelectionMode(JFileChooser.OPEN_DIALOG);
+            // get filename by user
+            if (jfc.showOpenDialog(getJFrame()) == JFileChooser.APPROVE_OPTION) {
+                File file = jfc.getSelectedFile();
+                String contains = LoadSaveFile.openFile(file);
+                showText(contains);
+            }
+
         }
     }
 
-    class SaveButtonEventHandler implements ActionListener
-    {
-        public void actionPerformed(ActionEvent e)
-        {
-            //open file dialog
+    class SaveButtonEventHandler implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser jfc = new JFileChooser();
+            
+            if(jfc.showSaveDialog(getJFrame()) == JFileChooser.APPROVE_OPTION)
+            {
+                File file = jfc.getSelectedFile();
+                LoadSaveFile.saveFile(file, getAreaText());
+            }
         }
     }
 
-
-    class ExitMenuItemHandler implements ActionListener{
-        public void actionPerformed(ActionEvent e){
+    class ExitMenuItemHandler implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
             getJFrame().dispose();
         }
     }
 
+    private void showText(String text) {
+        // places text to UI
+        getTextArea().setText(text);
+    }
+
+    private String getAreaText()
+    {
+        return getTextArea().getText();
+    }
 
     public void run() {
         // runs the UI
@@ -90,7 +112,6 @@ public class MainWindow{
         getJFrame().setJMenuBar(getMenuBar());
 
         getJFrame().add(getJScrollPane());
-
         getJFrame().setVisible(true);
     }
 
