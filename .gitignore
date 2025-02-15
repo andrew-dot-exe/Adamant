@@ -6,3 +6,4 @@ build
 bin/
 app/bin
 app/bin/*
+app/bin/main/com/andrewexe/ui/*
