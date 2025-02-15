@@ -4,6 +4,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class EditorSettings {
@@ -38,7 +40,7 @@ public class EditorSettings {
     private FontSettings fontSettings;
 
     @SuppressWarnings("unchecked")
-    private FontSettings parseFontSettings(Map<String, Object> root) throws Error {
+    private FontSettings parseFontSettings(Map<String, Object> root) throws Exception {
         try {
             Map<String, Object> font = (Map<String, Object>) root.get("font");
             int size = Math.toIntExact((long)font.get("size"));
@@ -47,7 +49,7 @@ public class EditorSettings {
             return new FontSettings(family, size);
         } catch (Exception exc) {
             Logger.printErr(moduleName, exc.getMessage());
-            throw new Error("Font info corrupted.");
+            throw new Exception("Font info corrupted.");
         }
     }
 
@@ -78,13 +80,12 @@ public class EditorSettings {
             fontSettings = parseFontSettings(parsed);
 
         } catch (Exception e) {
-            // TODO: handle exception
-            // create default config file
             Logger.printErr(moduleName, e.getMessage());
             Logger.printErr(moduleName, "config file not found");
             if(fontSettings == null)
             {
-                fontSettings = new FontSettings("Monospaced",9);
+                fontSettings = new FontSettings("Monospaced",12);
+                writeSettings();
             }
         }
 
@@ -92,6 +93,24 @@ public class EditorSettings {
 
     public Font getFontFromSettings() {
         return fontSettings.getFont();
+    }
+
+    public void writeSettings()
+    {
+        String configPath = getPath();
+        Map<String, Object> root = new LinkedHashMap<>();
+        Map<String, Object> fontSettingsNode = new LinkedHashMap<>();
+        
+        fontSettingsNode.put("family", fontSettings.getFont().getFamily());
+        fontSettingsNode.put("size", fontSettings.getFont().getSize());
+        root.put("font", fontSettingsNode);
+
+        try {
+            TomlWriter.writeTomlFile(Path.of(configPath), root);
+        } catch (Exception e) {
+            Logger.printErr(moduleName, e.getMessage());
+        }
+        
     }
 
 }
