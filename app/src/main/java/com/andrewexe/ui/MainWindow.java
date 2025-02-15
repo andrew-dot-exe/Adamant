@@ -4,16 +4,13 @@ import javax.swing.*;
 
 import com.andrewexe.io.LoadSaveFile;
 
+import java.awt.Font;
 import java.awt.event.*;
 import java.io.File;
 
-public class MainWindow {
+public class MainWindow implements IGUI {
 
     private JFrame mainFrame;
-    private JMenuBar mJMenuBar;
-
-    private JScrollPane areaScrollPane;
-    private JTextArea textArea;
 
     private JFrame getJFrame() {
         if (mainFrame == null) {
@@ -21,6 +18,11 @@ public class MainWindow {
         }
         return mainFrame;
     }
+
+    private JMenuBar mJMenuBar;
+
+    private JScrollPane areaScrollPane;
+    private JTextArea textArea;
 
     private JMenuBar getMenuBar() {
         // sets menubar with
@@ -50,7 +52,6 @@ public class MainWindow {
     public JTextArea getTextArea() {
         if (textArea == null) {
             textArea = new JTextArea();
-            textArea.setLineWrap(true);
         }
         return textArea;
     }
@@ -79,9 +80,8 @@ public class MainWindow {
     class SaveButtonEventHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             JFileChooser jfc = new JFileChooser();
-            
-            if(jfc.showSaveDialog(getJFrame()) == JFileChooser.APPROVE_OPTION)
-            {
+
+            if (jfc.showSaveDialog(getJFrame()) == JFileChooser.APPROVE_OPTION) {
                 File file = jfc.getSelectedFile();
                 LoadSaveFile.saveFile(file, getAreaText());
             }
@@ -99,9 +99,24 @@ public class MainWindow {
         getTextArea().setText(text);
     }
 
-    private String getAreaText()
-    {
+    private String getAreaText() {
         return getTextArea().getText();
+    }
+
+    public Font getFont() {
+        return getTextArea().getFont();
+    }
+
+    public void setFont(Font font) {
+        getTextArea().setFont(font);
+    }
+
+    public boolean getWordWrap() {
+        return getTextArea().getLineWrap();
+    }
+
+    public void setWordWrap(boolean value) {
+        textArea.setLineWrap(value);
     }
 
     public void run() {
