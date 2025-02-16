@@ -37,6 +37,16 @@ application {
     mainClass = "com.andrewexe.App"
 }
 
+tasks.jar {
+    manifest {
+        attributes(
+            "Implementation-Title" to "adamant",
+            "Implementation-Version" to "0.0.1",
+            "Main-Class" to application.mainClass
+        )
+    }
+}
+
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
