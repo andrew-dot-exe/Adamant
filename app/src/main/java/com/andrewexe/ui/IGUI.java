@@ -9,4 +9,5 @@ public interface IGUI {
     public void setWordWrap(boolean value);
 
     //themings, etc.
+    public void useMacOSMenuBar();
 }

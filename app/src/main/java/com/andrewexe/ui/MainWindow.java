@@ -186,6 +186,11 @@ public class MainWindow implements IGUI {
         textArea.setLineWrap(value);
     }
 
+    public void useMacOSMenuBar()
+    {
+        System.setProperty("apple.laf.useScreenMenuBar", "true");
+    }
+
     public void run() {
         // runs the UI
 

@@ -3,6 +3,7 @@ package com.andrewexe;
 import java.awt.*;
 import com.andrewexe.editor.EditorSettings;
 import com.andrewexe.editor.Logger;
+import com.andrewexe.editor.Utils;
 import com.andrewexe.ui.MainWindow;
 
 public class TextEditor {
@@ -30,6 +31,12 @@ public class TextEditor {
     {
         //load settings
         loadSettings();
+        //determine os
+        Utils.OS os = Utils.getCurrentOS();
+        if(os == Utils.OS.MACOS){
+            getMainWindow().useMacOSMenuBar();
+        }
+        Logger.printMessage("Editor", String.format("client's OS: %s", os.toString()));
         Logger.printMessage("Editor", "we start gui");
         getMainWindow().run();
     }
