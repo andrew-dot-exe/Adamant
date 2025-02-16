@@ -11,7 +11,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.*;
 import java.io.File;
-
+import java.util.ResourceBundle.Control;
 
 public class MainWindow implements IGUI {
 
@@ -42,23 +42,24 @@ public class MainWindow implements IGUI {
         ControlsAdapter.getTextArea().setLineWrap(value);
     }
 
-    public void useMacOSMenuBar()
-    {
+    public void useMacOSMenuBar() {
         System.setProperty("apple.laf.useScreenMenuBar", "true");
     }
 
     public void run() {
         // runs the UI
 
-        
-        ControlsAdapter.getMainFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // todo: on mac change to close window
+        ControlsAdapter.getMainFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // todo: on mac change to close
+                                                                                       // window
         ControlsAdapter.getMainFrame().setSize(600, 400);
         ControlsAdapter.getMainFrame().setJMenuBar(ControlsAdapter.getMenuBar());
-        ControlsAdapter.getMainFrame().add(ControlsAdapter.getTextArea());
+
+        ControlsAdapter.getScrollPane().add(ControlsAdapter.getTextArea());
+
+        ControlsAdapter.getMainFrame().add(
+                ControlsAdapter.getTabbedPane());
 
         ControlsAdapter.getMainFrame().add(ControlsAdapter.getBottomPanel(), BorderLayout.SOUTH);
-        // ControlsAdapter.getMainFrame().add(getTabbedPane());
-
 
         ControlsAdapter.getMainFrame().setVisible(true);
     }

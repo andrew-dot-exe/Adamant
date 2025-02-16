@@ -26,19 +26,21 @@ public class MenuBar extends JMenuBar {
             if (jfc.showOpenDialog(ControlsAdapter.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
                 File file = jfc.getSelectedFile();
                 String contains = LoadSaveFile.openFile(file); // todo: remove dependency by interface
-                ControlsAdapter.getTextArea().setText(contains);
+                ControlsAdapter.getTabbedPane().openNewTab(file.getName(), contains);
             }
 
         }
     }
 
     class SaveButtonEventHandler implements ActionListener {
+        
         public void actionPerformed(ActionEvent e) {
+            String text = ControlsAdapter.getTabbedPane().getTextFromCurrentArea();
             JFileChooser jfc = new JFileChooser();
 
             if (jfc.showSaveDialog(ControlsAdapter.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
                 File file = jfc.getSelectedFile();
-                LoadSaveFile.saveFile(file, ControlsAdapter.getTextArea().getText());
+                LoadSaveFile.saveFile(file, text);
             }
         }
     }
