@@ -1,9 +1,7 @@
 package com.andrewexe.ui.controls;
 
-import java.awt.TextArea;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -18,6 +16,7 @@ public class TabbedTextArea extends JTabbedPane{
     private HashMap<String, PlainTextArea> areas = new HashMap<String, PlainTextArea>();
 
     public TabbedTextArea(int tabPosition, int scrollTabs){
+        
         super(tabPosition, scrollTabs);
         bindEvents();
         openEmpty();
@@ -34,7 +33,7 @@ public class TabbedTextArea extends JTabbedPane{
     }
 
     public JTextArea getAreaByFilename(String filename){
-        return areas.get(filename); //returns null if not found
+        return areas.get(filename).getTextArea(); //returns null if not found
     }
 
     public void openFile(String filename, String text){
@@ -57,7 +56,7 @@ public class TabbedTextArea extends JTabbedPane{
     public String getTextFromCurrentArea()
     {
         String filename = this.getTitleAt(this.getSelectedIndex());
-        return areas.get(filename).getText();
+        return areas.get(filename).getTextArea().getSelectedText();
     }
 
     public List<String> getAllTabs(){
@@ -67,6 +66,7 @@ public class TabbedTextArea extends JTabbedPane{
     class TabChabgeListener implements ChangeListener{
         public void stateChanged(ChangeEvent event){
             System.out.println("tab chabged");
+            ControlsAdapter.getPositionLabel().setText(String.format("line: 1, col: 1"));
         }
     }
 }
