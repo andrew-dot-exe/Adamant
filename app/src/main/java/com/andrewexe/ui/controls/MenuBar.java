@@ -26,7 +26,7 @@ public class MenuBar extends JMenuBar {
             if (jfc.showOpenDialog(ControlsAdapter.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
                 File file = jfc.getSelectedFile();
                 String contains = LoadSaveFile.openFile(file); // todo: remove dependency by interface
-                ControlsAdapter.getTabbedPane().openNewTab(file.getName(), contains);
+                ControlsAdapter.getTabbedPane().openFile(file.getName(), contains);
             }
 
         }

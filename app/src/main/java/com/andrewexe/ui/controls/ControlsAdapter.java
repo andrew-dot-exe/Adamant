@@ -20,9 +20,9 @@ public class ControlsAdapter {
     public static TabbedTextArea getTabbedPane() {
         if (_tabPane == null) {
             _tabPane = new TabbedTextArea(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
-            _tabPane.openNewTab("first", "test");
-            _tabPane.openNewTab("second", "test");
-            _tabPane.openNewTab("third", "test");
+            _tabPane.openFile("first", "test");
+            _tabPane.openFile("second", "test");
+            _tabPane.openFile("third", "test");
 
         }
         return _tabPane;
@@ -57,10 +57,7 @@ public class ControlsAdapter {
     }
 
     public static PlainTextArea getTextArea() {
-        if (_textArea == null) {
-            _textArea = new PlainTextArea();
-        }
-        return _textArea;
+        return getTabbedPane().getCurrentTextArea();
     }
 
     public static JFrame getMainFrame() {

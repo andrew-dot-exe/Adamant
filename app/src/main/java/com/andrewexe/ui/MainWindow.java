@@ -49,12 +49,21 @@ public class MainWindow implements IGUI {
     public void run() {
         // runs the UI
 
+        // set look and feel
+
         ControlsAdapter.getMainFrame().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // todo: on mac change to close
                                                                                        // window
         ControlsAdapter.getMainFrame().setSize(600, 400);
         ControlsAdapter.getMainFrame().setJMenuBar(ControlsAdapter.getMenuBar());
+        try {
+            // Set cross-platform Java L&F (also called "Metal")
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception e) {
+            // handle exception
+            System.out.println("no LAF");
+        }
 
-        ControlsAdapter.getScrollPane().add(ControlsAdapter.getTextArea());
+        //ControlsAdapter.getScrollPane().add(ControlsAdapter.getTextArea());
 
         ControlsAdapter.getMainFrame().add(
                 ControlsAdapter.getTabbedPane());

@@ -32,6 +32,9 @@ public class PlainTextArea extends JTextArea {
                         return;
                     }
                 }
+                else{
+                    System.out.println("pos label not found");
+                }
             }
         });
     }
