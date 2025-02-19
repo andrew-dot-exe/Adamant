@@ -48,6 +48,7 @@ public class MainWindow implements IGUI {
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
             SwingUtilities.updateComponentTreeUI(ControlsAdapter.getMainFrame());
+            
         } catch (Exception e) {
             System.out.println("no LAF");
         }

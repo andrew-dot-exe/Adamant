@@ -31,6 +31,7 @@ public class PlainTextArea extends JPanel {
 
     private void packToTextArea() {
         scrollPane = new JScrollPane(textArea);
+        SwingUtilities.updateComponentTreeUI(this); // exception fix
         add(scrollPane, BorderLayout.CENTER);
     }
 
