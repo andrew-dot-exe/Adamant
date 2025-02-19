@@ -1,78 +1,71 @@
 package com.andrewexe.ui.controls;
 
-import java.awt.TextArea;
-
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
+import java.awt.BorderLayout;
 
-public class PlainTextArea extends JScrollPane {
+public class PlainTextArea extends JPanel {
 
-    private JTextArea _TextArea;
+    protected JButton decrButton;
 
-    private void packToTextArea(String text)
-    {
-        _TextArea = new JTextArea(text);
-    }
+    private JScrollPane scrollPane;
+    private JTextArea textArea;
 
-    private void packToTextArea()
-    {
-        _TextArea = new JTextArea();
-    }
-
-    public JTextArea getTextArea()
-    {
-        return this._TextArea;
-    }
-
-    public PlainTextArea(){
-        super();
+    public PlainTextArea() {
+        super(new BorderLayout());
+        decrButton = new JButton();
+        textArea = new JTextArea();
         packToTextArea();
         addCaretListener();
     }
 
-    public PlainTextArea(String text){
-        super();
-        packToTextArea(text);
+    public PlainTextArea(String text) {
+        super(new BorderLayout());
+        decrButton = new JButton();
+        textArea = new JTextArea(text);
+        packToTextArea();
         addCaretListener();
     }
 
-    private void addCaretListener(){
-        getTextArea().addCaretListener(new CaretListener() {
+    private void packToTextArea() {
+        scrollPane = new JScrollPane(textArea);
+        add(scrollPane, BorderLayout.CENTER);
+    }
 
+    public JTextArea getTextArea() {
+        return textArea;
+    }
+
+    private void addCaretListener() {
+        textArea.addCaretListener(new CaretListener() {
             @Override
             public void caretUpdate(CaretEvent e) {
                 if (ControlsAdapter.getPositionLabel() != null) {
-                    // try {
-                    //     int caretPosition = ControlsAdapter.getTextArea().getCaretPosition();
-                    //     int line = TextAreaHanlders.getLineNumber(ControlsAdapter.getTextArea(), caretPosition) + 1;
-                    //     int column = TextAreaHanlders.getColumnNumber(ControlsAdapter.getTextArea(), caretPosition) + 1;            
-                    //     ControlsAdapter.getPositionLabel().setText(String.format("line: %d, col: %d", line, column));
-                    // } catch (Exception exc) {
-                    //     //Logger.printErr(moduleName, exc.getMessage());
-                    //     return;
-                    // }
-                }
-                else{
-                    System.out.println("pos label not found");
+                    try {
+                        int caretPosition = textArea.getCaretPosition();
+                        int line = TextAreaHandlers.getLineNumber(textArea, caretPosition) + 1;
+                        int column = TextAreaHandlers.getColumnNumber(textArea, caretPosition) + 1;
+                        ControlsAdapter.getPositionLabel().setText(String.format("line: %d, col: %d", line, column));
+                    } catch (Exception exc) {
+                        System.err.println("Error: " + exc.getMessage());
+                    }
+                } else {
+                    System.out.println("Position label not found");
                 }
             }
         });
     }
 
-    class TextAreaHanlders {
-        private static int getLineNumber(JTextArea textArea, int position) throws BadLocationException {
+    private static class TextAreaHandlers {
+        static int getLineNumber(JTextArea textArea, int position) throws BadLocationException {
             return textArea.getLineOfOffset(position);
         }
 
-        // Получение позиции в строке (начиная с 0)
-        private static int getColumnNumber(JTextArea textArea, int position) throws BadLocationException {
-            int lineStart = textArea.getLineStartOffset(
-                    textArea.getLineOfOffset(position));
+        static int getColumnNumber(JTextArea textArea, int position) throws BadLocationException {
+            int lineStart = textArea.getLineStartOffset(textArea.getLineOfOffset(position));
             return position - lineStart;
         }
     }
-
 }

@@ -48,9 +48,9 @@ public class TabbedTextArea extends JTabbedPane{
         openFile(dummyFilename, "");
     }
 
-    public PlainTextArea getCurrentTextArea(){
+    public JTextArea getCurrentTextArea(){
         String filename = this.getTitleAt(this.getSelectedIndex());
-        return areas.get(filename);
+        return areas.get(filename).getTextArea();
     }
 
     public String getTextFromCurrentArea()
