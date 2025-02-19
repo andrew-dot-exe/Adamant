@@ -13,7 +13,6 @@ public class ControlsAdapter {
 
     private static TabbedTextArea _tabPane;
     private static JScrollPane _scrollPane;
-    private static PlainTextArea _textArea;
 
     private static JLabel _positionLabel;
     private static BottomPanel _panel;

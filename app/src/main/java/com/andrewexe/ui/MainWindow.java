@@ -22,11 +22,11 @@ public class MainWindow implements IGUI {
     }
 
     public boolean getWordWrap() {
-        return false;//ControlsAdapter.getTextArea().getLineWrap();
+        return ControlsAdapter.getTextArea().getLineWrap();
     }
 
     public void setWordWrap(boolean value) {
-       // ControlsAdapter.getTextArea().setLineWrap(value);
+       ControlsAdapter.getTextArea().setLineWrap(value);
     }
 
     public void useMacOSMenuBar() {
