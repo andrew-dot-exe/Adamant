@@ -5,6 +5,15 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
 import java.awt.BorderLayout;
+import java.awt.HeadlessException;
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.IOException;
 
 public class PlainTextArea extends JPanel {
 
@@ -18,7 +27,7 @@ public class PlainTextArea extends JPanel {
         decrButton = new JButton();
         textArea = new JTextArea();
         packToTextArea();
-        addCaretListener();
+        addListeners();
     }
 
     public PlainTextArea(String text) {
@@ -26,7 +35,7 @@ public class PlainTextArea extends JPanel {
         decrButton = new JButton();
         textArea = new JTextArea(text);
         packToTextArea();
-        addCaretListener();
+        addListeners();
     }
 
     private void packToTextArea() {
@@ -39,7 +48,7 @@ public class PlainTextArea extends JPanel {
         return textArea;
     }
 
-    private void addCaretListener() {
+    private void addListeners() {
         textArea.addCaretListener(new CaretListener() {
             @Override
             public void caretUpdate(CaretEvent e) {
@@ -56,6 +65,42 @@ public class PlainTextArea extends JPanel {
                     System.out.println("Position label not found");
                 }
             }
+        });
+        textArea.addKeyListener(new KeyListener() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {}
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                //meta-c
+                if(e.isMetaDown() && e.getKeyCode() == KeyEvent.VK_C){
+                    String selected = textArea.getSelectedText();
+                    StringSelection selection = new StringSelection(selected);
+                    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
+                }
+                //meta-v
+                else if(e.isMetaDown() && e.getKeyCode() == KeyEvent.VK_V){
+                    String clipboard;
+                    try {
+                        clipboard = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+                        textArea.setText(textArea.getText() + clipboard);
+                    } catch (HeadlessException | UnsupportedFlavorException | IOException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
+                    
+                }
+                // meta-a
+                //meta-z
+                //meta-x
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+            
         });
     }
 
