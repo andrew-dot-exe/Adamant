@@ -56,7 +56,7 @@ public class TabbedTextArea extends JTabbedPane{
     public String getTextFromCurrentArea()
     {
         String filename = this.getTitleAt(this.getSelectedIndex());
-        return areas.get(filename).getTextArea().getSelectedText();
+        return areas.get(filename).getTextArea().getText();
     }
 
     public List<String> getAllTabs(){
