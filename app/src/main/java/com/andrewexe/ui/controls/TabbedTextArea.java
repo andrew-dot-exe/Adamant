@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -13,7 +13,7 @@ public class TabbedTextArea extends JTabbedPane{
     private final String initialFilename = "empty";
     private int empties = 0;
 
-    private HashMap<String, PlainTextArea> areas = new HashMap<String, PlainTextArea>();
+    private HashMap<String, UniversalTextArea> areas = new HashMap<String, UniversalTextArea>();
 
     public TabbedTextArea(int tabPosition, int scrollTabs){
         
@@ -32,13 +32,13 @@ public class TabbedTextArea extends JTabbedPane{
         this.addChangeListener(new TabChabgeListener());
     }
 
-    public JTextArea getAreaByFilename(String filename){
-        return areas.get(filename).getTextArea(); //returns null if not found
+    public JTextPane getAreaByFilename(String filename){
+        return areas.get(filename).getTextPane(); //returns null if not found
     }
 
     public void openFile(String filename, String text){
         // лучше подходит под SR
-        areas.put(filename, new PlainTextArea(text));
+        areas.put(filename, new UniversalTextArea(text));
         this.add(filename, areas.get(filename));
     }
 
@@ -48,15 +48,15 @@ public class TabbedTextArea extends JTabbedPane{
         openFile(dummyFilename, "");
     }
 
-    public JTextArea getCurrentTextArea(){
+    public JTextPane getCurrentTextArea(){
         String filename = this.getTitleAt(this.getSelectedIndex());
-        return areas.get(filename).getTextArea();
+        return areas.get(filename).getTextPane();
     }
 
     public String getTextFromCurrentArea()
     {
         String filename = this.getTitleAt(this.getSelectedIndex());
-        return areas.get(filename).getTextArea().getText();
+        return areas.get(filename).getTextPane().getText();
     }
 
     public List<String> getAllTabs(){

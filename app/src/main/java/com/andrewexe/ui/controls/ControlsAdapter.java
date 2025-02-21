@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 
 public class ControlsAdapter {
 
@@ -56,7 +56,7 @@ public class ControlsAdapter {
         return _MenuBar;
     }
 
-    public static JTextArea getTextArea() {
+    public static JTextPane getTextArea() {
         return getTabbedPane().getCurrentTextArea();
     }
 

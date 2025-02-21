@@ -9,54 +9,60 @@ import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 
-public class PlainTextArea extends JPanel {
+public class UniversalTextArea extends JPanel {
 
     protected JButton decrButton;
 
     private JScrollPane scrollPane;
-    private JTextArea textArea;
+    private JTextPane textPane;
 
-    public PlainTextArea() {
+    public UniversalTextArea() {
         super(new BorderLayout());
         decrButton = new JButton();
-        textArea = new JTextArea();
-        packToTextArea();
+        textPane = new JTextPane();
+        packTotextPane();
         addListeners();
     }
 
-    public PlainTextArea(String text) {
+    public UniversalTextArea(String text) {
         super(new BorderLayout());
         decrButton = new JButton();
-        textArea = new JTextArea(text);
-        packToTextArea();
+        textPane = new JTextPane();
+        //set text
+        try{
+            textPane.getDocument().insertString(0, text, null);
+        }
+        catch(Exception exc){
+            //todo: messagebox
+        }
+        packTotextPane();
         addListeners();
     }
 
-    private void packToTextArea() {
-        scrollPane = new JScrollPane(textArea);
+    private void packTotextPane() {
+        scrollPane = new JScrollPane(textPane);
         SwingUtilities.updateComponentTreeUI(this); // exception fix
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    public JTextArea getTextArea() {
-        return textArea;
+    public JTextPane getTextPane() {
+        return textPane;
     }
 
     private void addListeners() {
-        textArea.addCaretListener(new CaretListener() {
+        textPane.addCaretListener(new CaretListener() {
             @Override
             public void caretUpdate(CaretEvent e) {
                 if (ControlsAdapter.getPositionLabel() != null) {
                     try {
-                        int caretPosition = textArea.getCaretPosition();
-                        int line = TextAreaHandlers.getLineNumber(textArea, caretPosition) + 1;
-                        int column = TextAreaHandlers.getColumnNumber(textArea, caretPosition) + 1;
+                        int caretPosition = textPane.getCaretPosition();
+                        int line = textPaneHandlers.getLineNumber(textPane, caretPosition) + 1;
+                        int column = textPaneHandlers.getColumnNumber(textPane, caretPosition) + 1;
                         ControlsAdapter.getPositionLabel().setText(String.format("line: %d, col: %d", line, column));
                     } catch (Exception exc) {
                         System.err.println("Error: " + exc.getMessage());
@@ -66,7 +72,7 @@ public class PlainTextArea extends JPanel {
                 }
             }
         });
-        textArea.addKeyListener(new KeyListener() {
+        textPane.addKeyListener(new KeyListener() {
 
             @Override
             public void keyTyped(KeyEvent e) {}
@@ -75,7 +81,7 @@ public class PlainTextArea extends JPanel {
             public void keyPressed(KeyEvent e) {
                 //meta-c
                 if(e.isMetaDown() && e.getKeyCode() == KeyEvent.VK_C){
-                    String selected = textArea.getSelectedText();
+                    String selected = textPane.getSelectedText();
                     StringSelection selection = new StringSelection(selected);
                     Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
                 }
@@ -84,7 +90,7 @@ public class PlainTextArea extends JPanel {
                     String clipboard;
                     try {
                         clipboard = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
-                        textArea.setText(textArea.getText() + clipboard);
+                        textPane.setText(textPane.getText() + clipboard);
                     } catch (HeadlessException | UnsupportedFlavorException | IOException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
@@ -104,14 +110,14 @@ public class PlainTextArea extends JPanel {
         });
     }
 
-    private static class TextAreaHandlers {
-        static int getLineNumber(JTextArea textArea, int position) throws BadLocationException {
-            return textArea.getLineOfOffset(position);
+    private static class textPaneHandlers {
+        static int getLineNumber(JTextPane textPane, int position) throws BadLocationException {
+            return 0;//textPane.getLineOfOffset(position);
         }
 
-        static int getColumnNumber(JTextArea textArea, int position) throws BadLocationException {
-            int lineStart = textArea.getLineStartOffset(textArea.getLineOfOffset(position));
-            return position - lineStart;
+        static int getColumnNumber(JTextPane textPane, int position) throws BadLocationException {
+            //int lineStart = textPane.getLineStartOffset(textPane.getLineOfOffset(position));
+            return 0; //position - lineStart;
         }
     }
 }
