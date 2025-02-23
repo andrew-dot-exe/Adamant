@@ -1,6 +1,7 @@
-package com.andrewexe.editor;
+package com.andrewexe;
 
-public class Logger {
+//must be deleted
+public class MyLogger {
     public static void printErr(String module, String message) {
         System.out.println(String.format("ERROR in module %s: %s", module, message));
     }

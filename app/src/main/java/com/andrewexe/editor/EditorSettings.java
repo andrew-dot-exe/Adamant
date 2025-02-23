@@ -8,6 +8,8 @@ import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.andrewexe.MyLogger;
+
 public class EditorSettings {
 
     private final String moduleName = "SettingsParser";
@@ -45,10 +47,10 @@ public class EditorSettings {
             Map<String, Object> font = (Map<String, Object>) root.get("font");
             int size = Math.toIntExact((long)font.get("size"));
             String family = (String) font.get("family");
-            Logger.printMessage(moduleName, String.format("family: %s\nsize: %d", family, size));
+            MyLogger.printMessage(moduleName, String.format("family: %s\nsize: %d", family, size));
             return new FontSettings(family, size);
         } catch (Exception exc) {
-            Logger.printErr(moduleName, exc.getMessage());
+            MyLogger.printErr(moduleName, exc.getMessage());
             throw new Exception("Font info corrupted.");
         }
     }
@@ -71,7 +73,7 @@ public class EditorSettings {
 
     public EditorSettings() {
         String configPath = getPath();
-        Logger.printMessage(moduleName, String.format("configFilename: %s", configPath));
+        MyLogger.printMessage(moduleName, String.format("configFilename: %s", configPath));
         try {
             // determine OS
             File configFile = new File(configPath);
@@ -80,8 +82,8 @@ public class EditorSettings {
             fontSettings = parseFontSettings(parsed);
 
         } catch (Exception e) {
-            Logger.printErr(moduleName, e.getMessage());
-            Logger.printErr(moduleName, "config file not found");
+            MyLogger.printErr(moduleName, e.getMessage());
+            MyLogger.printErr(moduleName, "config file not found");
             if(fontSettings == null)
             {
                 fontSettings = new FontSettings("Monospaced",12);
@@ -108,7 +110,7 @@ public class EditorSettings {
         try {
             TomlWriter.writeTomlFile(Path.of(configPath), root);
         } catch (Exception e) {
-            Logger.printErr(moduleName, e.getMessage());
+            MyLogger.printErr(moduleName, e.getMessage());
         }
         
     }

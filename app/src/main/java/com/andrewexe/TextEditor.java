@@ -2,12 +2,13 @@ package com.andrewexe;
 
 import java.awt.*;
 import com.andrewexe.editor.EditorSettings;
-import com.andrewexe.editor.Logger;
 import com.andrewexe.editor.Utils;
 import com.andrewexe.ui.MainWindow;
 
-public class TextEditor {
 
+
+public class TextEditor {
+    
     private MainWindow mw;
 
     private MainWindow getMainWindow()
@@ -36,8 +37,8 @@ public class TextEditor {
         if(os == Utils.OS.MACOS){
             getMainWindow().useMacOSMenuBar();
         }
-        Logger.printMessage("Editor", String.format("client's OS: %s", os.toString()));
-        Logger.printMessage("Editor", "we start gui");
+        MyLogger.printMessage("Editor", String.format("client's OS: %s", os.toString()));
+        MyLogger.printMessage("Editor", "we start gui");
         getMainWindow().run();
     }
 

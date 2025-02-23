@@ -45,13 +45,13 @@ public class MainWindow implements IGUI {
         ControlsAdapter.getMainFrame().add(ControlsAdapter.getBottomPanel(), BorderLayout.SOUTH);
 
         ControlsAdapter.getMainFrame().setVisible(true);
-        try {
-            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-            SwingUtilities.updateComponentTreeUI(ControlsAdapter.getMainFrame());
+        // try {
+        //     UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        //     SwingUtilities.updateComponentTreeUI(ControlsAdapter.getMainFrame());
             
-        } catch (Exception e) {
-            System.out.println("no LAF");
-        }
+        // } catch (Exception e) {
+        //     System.out.println("no LAF");
+        // }
     }
 
 }

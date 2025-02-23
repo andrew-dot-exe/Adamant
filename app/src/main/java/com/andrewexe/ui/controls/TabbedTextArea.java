@@ -1,5 +1,7 @@
 package com.andrewexe.ui.controls;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,6 +32,7 @@ public class TabbedTextArea extends JTabbedPane{
 
     private void bindEvents(){
         this.addChangeListener(new TabChabgeListener());
+        this.addKeyListener(new TabHotkeyListener());
     }
 
     public JTextPane getAreaByFilename(String filename){
@@ -52,6 +55,12 @@ public class TabbedTextArea extends JTabbedPane{
         String filename = this.getTitleAt(this.getSelectedIndex());
         return areas.get(filename).getTextPane();
     }
+    
+    public void removeTextArea(){
+        String filename = this.getTitleAt(this.getSelectedIndex());
+        areas.remove(filename);
+        this.getSelectedComponent().remove(null);
+    }
 
     public String getTextFromCurrentArea()
     {
@@ -68,5 +77,24 @@ public class TabbedTextArea extends JTabbedPane{
             System.out.println("tab chabged");
             ControlsAdapter.getPositionLabel().setText(String.format("line: 1, col: 1"));
         }
+    }
+    class TabHotkeyListener implements KeyListener{
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            if(e.isMetaDown() && e.getKeyCode() == KeyEvent.VK_W){
+                System.out.println("tab remove");
+                removeTextArea();
+            }
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+        }
+
     }
 }

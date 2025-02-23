@@ -1,38 +1,41 @@
 package com.andrewexe.ui.controls;
 
 import javax.swing.*;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
-import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.StyledDocument;
+
+import com.andrewexe.MyLogger;
+
 import java.awt.BorderLayout;
-import java.awt.HeadlessException;
-import java.awt.Toolkit;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.io.IOException;
+import java.awt.event.ActionEvent;
 
 public class UniversalTextArea extends JPanel {
 
-    protected JButton decrButton;
+    protected JButton decrButton; //for exception workaround
 
     private JScrollPane scrollPane;
     private JTextPane textPane;
 
-    public UniversalTextArea() {
-        super(new BorderLayout());
+    private CaretStatus caretStatus;
+
+    private void setup(){
         decrButton = new JButton();
         textPane = new JTextPane();
+        this.caretStatus = new CaretStatus();
+    }
+
+    public UniversalTextArea() {
+        super(new BorderLayout());
+        setup();
         packTotextPane();
         addListeners();
     }
 
     public UniversalTextArea(String text) {
         super(new BorderLayout());
-        decrButton = new JButton();
-        textPane = new JTextPane();
+        setup();
         //set text
         try{
             textPane.getDocument().insertString(0, text, null);
@@ -54,70 +57,58 @@ public class UniversalTextArea extends JPanel {
         return textPane;
     }
 
-    private void addListeners() {
-        textPane.addCaretListener(new CaretListener() {
-            @Override
-            public void caretUpdate(CaretEvent e) {
-                if (ControlsAdapter.getPositionLabel() != null) {
-                    try {
-                        int caretPosition = textPane.getCaretPosition();
-                        int line = textPaneHandlers.getLineNumber(textPane, caretPosition) + 1;
-                        int column = textPaneHandlers.getColumnNumber(textPane, caretPosition) + 1;
-                        ControlsAdapter.getPositionLabel().setText(String.format("line: %d, col: %d", line, column));
-                    } catch (Exception exc) {
-                        System.err.println("Error: " + exc.getMessage());
-                    }
-                } else {
-                    System.out.println("Position label not found");
-                }
-            }
-        });
-        textPane.addKeyListener(new KeyListener() {
+    private void addListeners() { // all hotkey listeners
+        setupBoldHotkey(); //meta-b
 
-            @Override
-            public void keyTyped(KeyEvent e) {}
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                //meta-c
-                if(e.isMetaDown() && e.getKeyCode() == KeyEvent.VK_C){
-                    String selected = textPane.getSelectedText();
-                    StringSelection selection = new StringSelection(selected);
-                    Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
-                }
-                //meta-v
-                else if(e.isMetaDown() && e.getKeyCode() == KeyEvent.VK_V){
-                    String clipboard;
-                    try {
-                        clipboard = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
-                        textPane.setText(textPane.getText() + clipboard);
-                    } catch (HeadlessException | UnsupportedFlavorException | IOException e1) {
-                        // TODO Auto-generated catch block
-                        e1.printStackTrace();
-                    }
-                    
-                }
-                // meta-a
-                //meta-z
-                //meta-x
-
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-            }
-            
-        });
     }
 
-    private static class textPaneHandlers {
-        static int getLineNumber(JTextPane textPane, int position) throws BadLocationException {
-            return 0;//textPane.getLineOfOffset(position);
-        }
+    private void setupBoldHotkey() {
+        //todo: command key for macos
+        KeyStroke hotkey = KeyStroke.getKeyStroke("control B");
 
-        static int getColumnNumber(JTextPane textPane, int position) throws BadLocationException {
-            //int lineStart = textPane.getLineStartOffset(textPane.getLineOfOffset(position));
-            return 0; //position - lineStart;
+        InputMap map = textPane.getInputMap(JComponent.WHEN_FOCUSED);
+        ActionMap actionMap = textPane.getActionMap();
+        Action boldAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MyLogger.printMessage("bold hotkey", "i'm pressed");
+                StyledDocument doc = textPane.getStyledDocument();
+                int start = textPane.getSelectionStart();
+                int end = textPane.getSelectionEnd();
+                if (!caretStatus.isBold) {
+                    MyLogger.printMessage("bold hotkey", "bold");
+                    caretStatus.isBold = true;
+                } else {
+                    MyLogger.printMessage("bold hotkey", "clear");                
+                    caretStatus.isBold = false;
+                }
+                Style style = doc.addStyle("bold", null);
+                StyleConstants.setBold(style, caretStatus.isBold);
+                doc.setCharacterAttributes(start, end - start, style, false);
+                textPane.setCharacterAttributes(style, caretStatus.isBold);
+            }
+        };
+
+        map.put(hotkey, "makeBold");
+        actionMap.put("makeBold", boldAction);
+    }
+
+    public void CloseEditorInstance(){
+        //save y/n
+
+    }
+
+    class CaretStatus {
+        private boolean isBold;
+        private boolean isUnderlined;
+        private boolean isStrikethrough;
+        private boolean isCursive;
+
+        public CaretStatus() {
+            this.isBold = false;
+            this.isUnderlined = false;
+            this.isStrikethrough = false;
+            this.isCursive = false;
         }
     }
 }
