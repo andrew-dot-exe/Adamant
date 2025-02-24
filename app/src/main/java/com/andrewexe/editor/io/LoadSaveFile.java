@@ -1,4 +1,4 @@
-package com.andrewexe.io;
+package com.andrewexe.editor.io;
 
 import java.io.File;
 import java.io.FileInputStream;

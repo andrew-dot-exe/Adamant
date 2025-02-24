@@ -9,7 +9,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import com.andrewexe.io.LoadSaveFile;
+import com.andrewexe.editor.io.LoadSaveFile;
 
 public class MenuBar extends JMenuBar {
 
