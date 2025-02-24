@@ -1,60 +1,111 @@
 package com.andrewexe.editor.notes;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
+import java.util.ArrayList;
 
 public class LessonText {
 
-    public enum FORMATS {
-        BOLD
+    private ArrayList<Range> boldRanges;
+    private ArrayList<Range> underlinedRanges;
+    private ArrayList<Integer> level1Headings;
+    private ArrayList<Integer> level2Headings;
+    private ArrayList<Integer> level3Headings;
+
+    public ArrayList<Range> getBoldRanges() {
+        return boldRanges;
     }
 
-    private String rawText;
-
-    private List<Range> boldRanges;
-
-    public LessonText(String rawText)
-    {
-        this.rawText = rawText;
+    public ArrayList<Range> getUnderlinedRanges() {
+        return underlinedRanges;
     }
 
-    private void parseText(String line)
-    {
+    public ArrayList<Integer> getLevel1Headings() {
+        return level1Headings;
+    }
+
+    public ArrayList<Integer> getLevel2Headings() {
+        return level2Headings;
+    }
+
+    public ArrayList<Integer> getLevel3Headings() {
+        return level3Headings;
+    }
+
+    public String getRawText() {
+        return rawText;
+    }
+
+    String rawText = "";
+
+    public LessonText() {
+        this.level1Headings = new ArrayList<Integer>();
+        this.level2Headings = new ArrayList<Integer>();
+        this.level3Headings = new ArrayList<Integer>();
+
+        this.boldRanges = new ArrayList<Range>();
+        this.underlinedRanges = new ArrayList<Range>();
+    }
+
+    public void parseAll(File file) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            rawText = "";
+            int lineNumber = 0;
+            String line;
+            while ((line = reader.readLine()) != null) {
+                parseHeadings(line, lineNumber);
+                parseBold(line);
+                parseUnderlined(line);
+                rawText += line + "\n"; // Добавляем перенос строки
+                lineNumber++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void parseBold(String line) {
         int index = 0;
         while (index != -1) {
-            // Находим начало **
             int startMarker = line.indexOf("**", index);
             if (startMarker == -1) break;
-
-            // Находим конец **
+    
             int endMarker = line.indexOf("**", startMarker + 2);
             if (endMarker == -1) break;
-
-            // Извлекаем слово между **
-            String word = line.substring(startMarker + 2, endMarker);
+    
+            // Оставляем диапазон ВКЛЮЧАЯ маркеры **
+            boldRanges.add(new Range(startMarker, endMarker + 2)); // +2 чтобы захватить закрывающие **
             index = endMarker + 2;
         }
     }
 
-    public void setBoldRange(List<Range> ranges) {
-        this.boldRanges = ranges;
-    }
 
-    public void addRange(int start, int stop, FORMATS formats) {
-        Range range = new Range(start, stop);
-        switch (formats) {
-            case BOLD:
-                this.boldRanges.add(range);
-                break;
-
-            default:
-                return;
+    public void parseUnderlined(String line) {
+        int index = 0;
+        while (index != -1) {
+            int startMarker = line.indexOf("<u>", index);
+            if (startMarker == -1) break;
+    
+            int endMarker = line.indexOf("</u>", startMarker + 3);
+            if (endMarker == -1) break;
+    
+            // Диапазон ВКЛЮЧАЕТ теги <u> и </u>
+            underlinedRanges.add(new Range(startMarker, endMarker + 4)); // +4 для закрывающего </u>
+            index = endMarker + 4;
         }
     }
 
-    private void addBoldRange(Range range){
-        this.boldRanges.add(range);
+    public void parseHeadings(String line, int lineNumber) {
+        if (line.startsWith("###")) {
+            level3Headings.add(lineNumber);
+        } else if (line.startsWith("##")) {
+            level2Headings.add(lineNumber);
+        } else if (line.startsWith("#")) {
+            level1Headings.add(lineNumber);
+        }
     }
 
     public class Range {
