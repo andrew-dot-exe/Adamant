@@ -4,23 +4,27 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
+
+import com.andrewexe.editor.exceptions.ParsingFailedException;
+
+class NotSingleLineException extends Exception {
+    public NotSingleLineException(String message) {
+        super(message);
+    }
+}
 
 public class LessonText {
 
-    private ArrayList<Range> boldRanges;
-    private ArrayList<Range> underlinedRanges;
     private ArrayList<Integer> level1Headings;
     private ArrayList<Integer> level2Headings;
     private ArrayList<Integer> level3Headings;
 
-    public ArrayList<Range> getBoldRanges() {
-        return boldRanges;
-    }
+    private ArrayList<Range> boldHeadings;
+    //private ArrayList<Range> underlinedHeadings;
 
-    public ArrayList<Range> getUnderlinedRanges() {
-        return underlinedRanges;
+    public ArrayList<Range> getBoldHeadings() {
+        return boldHeadings;
     }
 
     public ArrayList<Integer> getLevel1Headings() {
@@ -35,96 +39,70 @@ public class LessonText {
         return level3Headings;
     }
 
-    public String getRawText() {
-        return rawText;
-    }
-
-    String rawText = "";
-
     public LessonText() {
-        this.level1Headings = new ArrayList<Integer>();
-        this.level2Headings = new ArrayList<Integer>();
-        this.level3Headings = new ArrayList<Integer>();
-
-        this.boldRanges = new ArrayList<Range>();
-        this.underlinedRanges = new ArrayList<Range>();
+        level1Headings = new ArrayList<Integer>();
+        level2Headings = new ArrayList<Integer>();
+        level3Headings = new ArrayList<Integer>();
+        boldHeadings = new ArrayList<Range>();
     }
 
-    public void parseAll(File file) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            rawText = "";
-            int lineNumber = 0;
-            String line;
-            while ((line = reader.readLine()) != null) {
-                parseHeadings(line, lineNumber);
-                parseBold(line);
-                parseUnderlined(line);
-                rawText += line + "\n"; // Добавляем перенос строки
-                lineNumber++;
+    // will be fully rewrited
+    public void parse(File textFile) throws ParsingFailedException {
+        int lineNumber = 1;
+        String line;
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(textFile))) {
+
+            while ((line = bufferedReader.readLine()) != null) {
+                parseLine(line, lineNumber);
+                lineNumber += 1;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new ParsingFailedException(lineNumber);
         }
     }
 
-    public void parseBold(String line) {
-        int index = 0;
-        while (index != -1) {
-            int startMarker = line.indexOf("**", index);
-            if (startMarker == -1) break;
-    
-            int endMarker = line.indexOf("**", startMarker + 2);
-            if (endMarker == -1) break;
-    
-            // Оставляем диапазон ВКЛЮЧАЯ маркеры **
-            boldRanges.add(new Range(startMarker, endMarker + 2)); // +2 чтобы захватить закрывающие **
-            index = endMarker + 2;
+    public void parse(String raw) {
+        int lineNumber = 1;
+        for (String line : raw.split("\n")) {
+            parseLine(line, lineNumber);
+            lineNumber += 1;
         }
     }
 
+    public void parseLine(String line, int number) {
+        processHeaders(line, number);
+        processFormat(line, number);
+    }
 
-    public void parseUnderlined(String line) {
-        int index = 0;
-        while (index != -1) {
-            int startMarker = line.indexOf("<u>", index);
-            if (startMarker == -1) break;
-    
-            int endMarker = line.indexOf("</u>", startMarker + 3);
-            if (endMarker == -1) break;
-    
-            // Диапазон ВКЛЮЧАЕТ теги <u> и </u>
-            underlinedRanges.add(new Range(startMarker, endMarker + 4)); // +4 для закрывающего </u>
-            index = endMarker + 4;
+    private void processHeaders(String line, int number) {
+        String firstLexem = line.split(" ")[0];
+        if (firstLexem.equals("#")) {
+            level1Headings.add(number);
+        } else if (firstLexem.equals("##")) {
+            level2Headings.add(number);
         }
     }
 
-    public void parseHeadings(String line, int lineNumber) {
-        if (line.startsWith("###")) {
-            level3Headings.add(lineNumber);
-        } else if (line.startsWith("##")) {
-            level2Headings.add(lineNumber);
-        } else if (line.startsWith("#")) {
-            level1Headings.add(lineNumber);
-        }
-    }
-
-    public class Range {
-        private int start;
-        private int stop;
-
-        public int getStart() {
-            return start;
-        }
-
-        public int getStop() {
-            return stop;
-        }
-
-        public Range(int start, int stop) {
-            this.start = start;
-            this.stop = stop;
+    public void processFormat(String line, int number) {
+        int start = -1;
+        int end = -1;
+        for (int pos = 0; pos < line.length() - 1; pos++) {
+            if (line.charAt(pos) == '*' ) {
+                if(line.charAt(pos + 1) == '*' ){
+                    if(start == -1)
+                        start = pos + 2;
+                    else
+                        end = pos - 1;
+                }
+            }
+            if (start != -1 && end != -1) {
+                boldHeadings.add(new Range(start, end));
+                start = -1;
+                end = -1;
+            }
         }
 
     }
+
 
 }
