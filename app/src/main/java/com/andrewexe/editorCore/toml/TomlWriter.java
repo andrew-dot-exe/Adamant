@@ -1,4 +1,4 @@
-package com.andrewexe.editor;
+package com.andrewexe.editorCore.toml;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -10,13 +10,13 @@ import java.util.Map;
 public class TomlWriter {
 
     public static void writeTomlFile(Path filePath, Map<String, Object> data) throws IOException {
-        try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
+        try (BufferedWriter writer = Files.newBufferedWriter(filePath)) { // replace String
             writeTable(writer, data, "");
         }
     }
 
     @SuppressWarnings("unchecked")
-    private static void writeTable(BufferedWriter writer, Map<String, Object> data, String parentKey) throws IOException {
+    private static void writeTable(BufferedWriter writer, Map<String, Object> data, String parentKey) throws IOException { // replace with string
         for (Map.Entry<String, Object> entry : data.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();

@@ -2,6 +2,7 @@ package com.andrewexe.ui;
 
 import javax.swing.*;
 
+import com.andrewexe.editor.IGUI;
 import com.andrewexe.ui.controls.ControlsAdapter;
 
 import java.awt.BorderLayout;
@@ -52,6 +53,24 @@ public class MainWindow implements IGUI {
         // } catch (Exception e) {
         //     System.out.println("no LAF");
         // }
+    }
+
+    @Override
+    public void addBoldText(String text) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addBoldText'");
+    }
+
+    @Override
+    public void addUnderlinedText(String text) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addUnderlinedText'");
+    }
+
+    @Override
+    public void getText(String text) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getText'");
     }
 
 }

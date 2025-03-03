@@ -1,4 +1,4 @@
-package com.andrewexe;
+package com.andrewexe.editorCore;
 
 //must be deleted
 public class MyLogger {

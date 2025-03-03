@@ -1,4 +1,4 @@
-package com.andrewexe.editor;
+package com.andrewexe.editorCore.toml;
 
 import java.io.BufferedReader;
 import java.io.IOException;

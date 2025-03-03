@@ -1,4 +1,4 @@
-package com.andrewexe;
+package com.andrewexe.editorCore;
 
 import java.awt.*;
 import com.andrewexe.editor.EditorSettings;
@@ -23,9 +23,9 @@ public class TextEditor {
     private void loadSettings()
     {
         //try default paths for settings, if not, create new.
-        EditorSettings settings = new EditorSettings();
-        Font configFont = settings.getFontFromSettings();
-        getMainWindow().setFont(configFont);
+        // EditorSettings settings = new EditorSettings();
+        // Font configFont = settings.getFontFromSettings();
+        // getMainWindow().setFont(configFont);
     }
 
     public void run()

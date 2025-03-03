@@ -9,7 +9,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import com.andrewexe.editor.io.LoadSaveFile;
+import com.andrewexe.editorCore.io.PlainTextLoadSave;
 
 public class MenuBar extends JMenuBar {
 
@@ -25,7 +25,7 @@ public class MenuBar extends JMenuBar {
             // get filename by user
             if (jfc.showOpenDialog(ControlsAdapter.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
                 File file = jfc.getSelectedFile();
-                String contains = LoadSaveFile.openFile(file); // todo: remove dependency by interface
+                String contains = PlainTextLoadSave.openFile(file); // todo: remove dependency by interface
                 ControlsAdapter.getTabbedPane().openFile(file.getName(), contains);
             }
 
@@ -40,7 +40,7 @@ public class MenuBar extends JMenuBar {
 
             if (jfc.showSaveDialog(ControlsAdapter.getMainFrame()) == JFileChooser.APPROVE_OPTION) {
                 File file = jfc.getSelectedFile();
-                LoadSaveFile.saveFile(file, text);
+                PlainTextLoadSave.saveFile(file, text);
             }
         }
     }

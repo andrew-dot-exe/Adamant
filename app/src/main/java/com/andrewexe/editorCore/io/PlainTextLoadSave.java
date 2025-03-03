@@ -1,10 +1,10 @@
-package com.andrewexe.editor.io;
+package com.andrewexe.editorCore.io;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-public class LoadSaveFile {
+public class PlainTextLoadSave {
     public static String openFile(File file) {
         try (FileInputStream fis = new FileInputStream(file)) {
             String out = "";
