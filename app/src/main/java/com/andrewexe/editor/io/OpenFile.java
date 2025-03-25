@@ -33,7 +33,7 @@ public class OpenFile {
     /**
      * Читает содержимое файла как единую строку с сохранением переносов
      * @param file - файл для чтения
-     * @return содержимое файла с оригинальными переносами строк
+     * @return содержимое файла
      */
     public static String readAsText(File file) {
         return String.join(System.lineSeparator(), readLines(file));
@@ -55,7 +55,7 @@ public class OpenFile {
     /**
      * Версия метода для работы с путём к файлу
      * @param path - путь к файлу
-     * @return содержимое файла с оригинальными переносами строк
+     * @return содержимое файла
      */
     public static String readAsText(String path) {
         return String.join(System.lineSeparator(), readLines(path));
