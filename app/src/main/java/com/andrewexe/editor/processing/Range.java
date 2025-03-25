@@ -1,4 +1,4 @@
-package com.andrewexe.core.text;
+package com.andrewexe.editor.processing;
 
 public class Range {
     private int start;

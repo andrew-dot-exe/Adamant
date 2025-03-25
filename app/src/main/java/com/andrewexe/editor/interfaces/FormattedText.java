@@ -1,4 +1,4 @@
-package com.andrewexe.core.text;
+package com.andrewexe.editor.interfaces;
 
 public interface FormattedText {
     void setBoldRange(int start, int stop);

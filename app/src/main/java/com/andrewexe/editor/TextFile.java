@@ -1,4 +1,6 @@
-package com.andrewexe.core.text;
+package com.andrewexe.editor;
+
+import java.io.IOError;
 
 public abstract class TextFile {
 
@@ -9,7 +11,10 @@ public abstract class TextFile {
         this.filename = filename;
     }
 
-    public abstract void open();
+    public void open() throws IOError
+    {
+        throw new IOError(new Error("File error"));
+    }
 
     public String getText(){
         return text;    

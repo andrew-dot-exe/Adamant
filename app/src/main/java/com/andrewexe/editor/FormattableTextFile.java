@@ -1,5 +1,8 @@
-package com.andrewexe.core.text;
+package com.andrewexe.editor;
 
+/*
+ * Представляет абстракцию над форматированным текстовым документом
+ */
 public abstract class FormattableTextFile extends TextFile{
     public FormattableTextFile(String filename){
         super(filename);

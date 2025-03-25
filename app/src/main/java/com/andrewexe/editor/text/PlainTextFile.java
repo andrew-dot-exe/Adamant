@@ -1,6 +1,6 @@
-package com.andrewexe.editor;
+package com.andrewexe.editor.text;
 
-import com.andrewexe.core.text.TextFile;
+import com.andrewexe.editor.TextFile;
 
 public class PlainTextFile extends TextFile{
 
@@ -12,6 +12,7 @@ public class PlainTextFile extends TextFile{
     public void open() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'open'");
+
     }
     
 }
