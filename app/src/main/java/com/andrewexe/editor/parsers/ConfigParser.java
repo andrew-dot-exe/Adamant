@@ -12,7 +12,7 @@ public class ConfigParser {
         try {
             for (String line : textFile) {
                 try {
-                    String[] splitted = line.split(" = "); // maybe shit
+                    String[] splitted = line.split(" = "); // it's real shit
                     values.put(splitted[0].trim(), splitted[1].trim());
                 } catch (IndexOutOfBoundsException exception) {
                     System.out.println(line);
